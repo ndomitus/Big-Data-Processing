@@ -1,5 +1,7 @@
 package intro
 
+import scala.annotation.tailrec
+
 /**
   * This part has some exercises for you to practice with the recursive lists and functions.
   * For the exercises in this part you are _not_ allowed to use library functions,
@@ -18,8 +20,23 @@ object Practice {
       * @param n amount of items to take.
       * @return the first n items of xs.
       */
-    def firstN(xs: List[Int], n: Int): List[Int] = ???
+    def firstN(xs: List[Int], n: Int): List[Int] = xs match{
+        case Nil => Nil
+        case _ if n <= 0 => Nil
+        case x :: t => x::firstN(t, n - 1)
+    }
 
+//     tail recursive option of take(n)
+
+//    def firstN(xs: List[Int], n: Int): List[Int] = {
+//        @tailrec
+//        def helper(rest: List[Int], n: Int, acc: List[Int]): List[Int] = rest match{
+//            case Nil => acc
+//            case _ if n <= 0 => acc
+//            case x :: t => helper(t, n-1, x::acc)
+//        }
+//        helper(helper(xs, n, Nil), n, Nil)
+//    }
 
     /** Q11 (4p)
       * Implement the function that returns the maximum value in the list.
@@ -28,7 +45,15 @@ object Practice {
       * @param xs list to process.
       * @return the maximum value in the list.
       */
-    def maxValue(xs: List[Int]): Int = ???
+    def maxValue(xs: List[Int]): Int = {
+        @tailrec
+        def helper(rest: List[Int], acc: Int): Int = rest match {
+            case Nil => acc
+            case x :: t if x > acc => helper(t, x)
+            case _ :: t => helper(t, acc)
+        }
+        helper(xs, Int.MinValue)
+    }
 
     /** Q12 (3p)
      * given two Ints, generate the List[Int] with both numbers inclusive
@@ -37,7 +62,23 @@ object Practice {
      * intList(2,7) // List(2,3,4,5,6,7)
      * intList(3,0) // List()
      */
-    def intList(a: Int, b: Int) : List[Int] = ???
+    def intList(a: Int, b: Int) : List[Int] = {
+        @tailrec
+        def helper(y: Int, acc: List[Int]): List[Int] = {
+            if(y < a) acc
+            else if(y == a) a::acc
+            else helper(y - 1, y::acc)
+        }
+        helper(b, Nil)
+    }
+
+//    just recursive, not tail recursive
+
+//    def intList(a: Int, b: Int) : List[Int] = {
+//        if(a > b)  Nil
+//        else if(a == b) a::Nil
+//        else a::intList(a+1,b)
+//    }
 
     /**
      * Q13 (7p)
@@ -60,5 +101,14 @@ object Practice {
      * so although 2, 6 and 10 satisfy the function, they are thrown out.
      */
     // a helper method which you've written yourself
-    def myFilter[A](xs: List[A], f: A => Boolean) : List[A] = ???
+    def myFilter[A](xs: List[A], f: A => Boolean) : List[A] = {
+        def helper(rest: List[A], even: Boolean): List[A] = rest match {
+            case Nil => Nil
+            case x :: t if f(x) =>
+                if (even) x::helper(t, !even)
+                else helper(t, !even)
+            case _ :: t => helper(t, even)
+        }
+        helper(xs, true)
+    }
 }
