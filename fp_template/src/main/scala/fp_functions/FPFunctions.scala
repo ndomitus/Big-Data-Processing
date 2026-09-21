@@ -274,14 +274,19 @@ object FPFunctions {
 
     /** Q17 (5p)
       * Takes `f` of 2 arguments and an `init` value and combines the elements by applying `f` on the result of each previous application.
+ *
       * @param xs the list to fold.
       * @param f the fold function.
       * @param init the initial value.
       * @tparam A the type of the items in `xs`.
       * @tparam B the result type of the fold function.
       * @return the result of folding `xs` with `f`.
-      */
-    def foldL[A, B](xs: List[A], f: (B, A) => B, init: B): B = ???
+     */
+    @tailrec
+    def foldL[A, B](xs: List[A], f: (B, A) => B, init: B): B = xs match {
+        case Nil => init
+        case x :: t => foldL(t, f, f(init, x))
+    }
 
     /** Q18 (5p)
       * Reuse `foldL` to define `foldR`.
