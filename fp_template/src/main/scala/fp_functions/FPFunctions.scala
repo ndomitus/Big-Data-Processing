@@ -247,7 +247,30 @@ object FPFunctions {
       * @param xs the list to flatten.
       * @return one list containing all items in `xs`.
       */
-    def recFlat(xs: List[Any]): List[Any] = ???
+    def recFlat(xs: List[Any]): List[Any] = {
+        @tailrec
+        def reverse(rest: List[Any], acc: List[Any]): List[Any] = rest match {
+            case Nil => acc
+            case x :: t => reverse(t, x::acc)
+        }
+
+        // same to case Nil => acc and then calling reverse(helper(xs,Nil), Nil)
+        @tailrec
+        def helper(rest: List[Any], acc: List[Any]): List[Any] = rest match {
+            case Nil => reverse(acc, Nil)
+            case (x: List[_]) :: t => helper(x ::: t, acc)
+            case x :: t => helper(t, x::acc)
+        }
+
+        helper(xs, Nil)
+    }
+
+//    normal recursion
+//    def recFlat(xs: List[Any]): List[Any] = xs match{
+//        case Nil => Nil
+//        case (x: List[_]) :: t => recFlat(x):::recFlat(t)
+//        case x :: t => x::recFlat(t)
+//    }
 
     /** Q17 (5p)
       * Takes `f` of 2 arguments and an `init` value and combines the elements by applying `f` on the result of each previous application.
