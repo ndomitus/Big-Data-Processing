@@ -203,6 +203,12 @@ object FPFunctions {
         reverse(helper(xs, Nil), Nil)
     }
 
+    // recursive not tail recursive
+//    def map[A,B](xs: List[A], f: A => B): List[B] = xs match {
+//        case Nil => Nil
+//        case x :: t => f(x)::map(t,f)
+//    }
+
     /** Q15 (5p)
       * Takes a function that returns a boolean and returns all elements that satisfy it.
       * @param xs the list to filter.

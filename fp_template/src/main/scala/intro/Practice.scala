@@ -20,23 +20,24 @@ object Practice {
       * @param n amount of items to take.
       * @return the first n items of xs.
       */
-    def firstN(xs: List[Int], n: Int): List[Int] = xs match{
-        case Nil => Nil
-        case _ if n <= 0 => Nil
-        case x :: t => x::firstN(t, n - 1)
+    def firstN(xs: List[Int], n: Int): List[Int] = {
+        @tailrec
+        def helper(rest: List[Int], n: Int, acc: List[Int]): List[Int] = rest match{
+            case Nil => acc
+            case _ if n <= 0 => acc
+            case x :: t => helper(t, n-1, x::acc)
+        }
+        helper(helper(xs, n, Nil), n, Nil)
     }
 
-//     tail recursive option of take(n)
 
-//    def firstN(xs: List[Int], n: Int): List[Int] = {
-//        @tailrec
-//        def helper(rest: List[Int], n: Int, acc: List[Int]): List[Int] = rest match{
-//            case Nil => acc
-//            case _ if n <= 0 => acc
-//            case x :: t => helper(t, n-1, x::acc)
-//        }
-//        helper(helper(xs, n, Nil), n, Nil)
-//    }
+    //    def firstN(xs: List[Int], n: Int): List[Int] = xs match{
+    //        case Nil => Nil
+    //        case _ if n <= 0 => Nil
+    //        case x :: t => x::firstN(t, n - 1)
+    //    }
+
+    //    recursive option of take(n)
 
     /** Q11 (4p)
       * Implement the function that returns the maximum value in the list.
