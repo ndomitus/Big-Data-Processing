@@ -1,5 +1,7 @@
 package fp_functions
 
+import scala.annotation.tailrec
+
 
 /**
  * This part is about implementing several functions that are very common in functional programming.
@@ -186,7 +188,20 @@ object FPFunctions {
       * @tparam B result type of mapping function.
       * @return a list of all items in `xs` mapped with `f`.
       */
-    def map[A, B](xs: List[A], f: A => B): List[B] = ???
+    def map[A, B](xs: List[A], f: A => B): List[B] = {
+        @tailrec
+        def reverse(rest: List[B], acc: List[B]): List[B] = rest match{
+            case Nil => acc
+            case x :: t => reverse(t, x::acc)
+        }
+
+        @tailrec
+        def helper(rest: List[A], acc: List[B]): List[B] = rest match{
+            case Nil => acc
+            case x :: t => helper(t, f(x)::acc)
+        }
+        reverse(helper(xs, Nil), Nil)
+    }
 
     /** Q15 (5p)
       * Takes a function that returns a boolean and returns all elements that satisfy it.
