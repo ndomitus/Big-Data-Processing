@@ -216,7 +216,29 @@ object FPFunctions {
       * @tparam A the type of the items in `xs`.
       * @return a list of all items in `xs` that satisfy `f`.
       */
-    def filter[A](xs: List[A], f: A => Boolean): List[A] = ???
+    def filter[A](xs: List[A], f: A => Boolean): List[A] = {
+        @tailrec
+        def reverse(rest: List[A], acc: List[A]): List[A] = rest match {
+            case Nil => acc
+            case x :: t => reverse(t, x::acc)
+        }
+
+        @tailrec
+        def helper(rest: List[A], acc: List[A]): List[A] = rest match{
+            case Nil => acc
+            case x :: t if f(x) => helper(t, x::acc)
+            case _ :: t => helper(t, acc)
+        }
+
+        reverse(helper(xs, Nil), Nil)
+    }
+
+//    just recursive
+//    def filter[A](xs: List[A], f: A => Boolean): List[A] = xs match{
+//        case Nil => Nil
+//        case x :: t if f(x) => x::filter(t,f)
+//        case _ :: t => filter(t,f)
+//    }
 
     /** Q16 (5p)
       * Recursively flattens a list that may contain more lists into 1 list.
