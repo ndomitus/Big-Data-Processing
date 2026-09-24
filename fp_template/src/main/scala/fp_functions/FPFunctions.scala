@@ -299,7 +299,21 @@ object FPFunctions {
       * @tparam B the result type of the fold function.
       * @return the result of folding `xs` with `f`.
       */
-    def foldR[A, B](xs: List[A], f: (A, B) => B, init: B): B = ???
+    def foldR[A, B](xs: List[A], f: (A, B) => B, init: B): B = {
+        @tailrec
+        def reverse(rest: List[A], acc: List[A]): List[A] = rest match {
+            case Nil => acc
+            case x :: t => reverse(t, x::acc)
+        }
+
+        //Argument 2 is a function value, not a call. Nothing runs yet; foldL will call it once per element.
+        // foldL always passes (accumulator, element), but your f wants (element, accumulator), so the lambda
+        // receives them in foldL's order and hands them to f in f's order.
+        foldL(reverse(xs, Nil), (acc: B, x: A) => f(x, acc), init)
+
+        //  val reversed = foldL(xs, (acc: List[A], x: A) => x::acc, Nil)
+        //  foldL(reversed, (acc: B, x: A) => f(x,acc), init)
+    }
 
     /** Q19 (5p)
       * Returns an iterable collection formed by iterating over the corresponding items of `xs` and `ys`.
@@ -311,5 +325,9 @@ object FPFunctions {
       * @tparam B the type of the items in `ys`.
       * @return a list of tuples of items in `xs` and `ys`.
       */
-    def zip[A, B](xs: List[A], ys: List[B]): List[(A, B)] = ???
+    def zip[A, B](xs: List[A], ys: List[B]): List[(A, B)] = (xs, ys) match {
+        case ( _ , Nil) => Nil
+        case (Nil, _ ) => Nil
+        case (x :: t, y :: l) => (x, y)::zip(t, l)
+    }
 }
