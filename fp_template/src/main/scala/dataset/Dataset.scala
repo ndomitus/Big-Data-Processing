@@ -67,7 +67,7 @@ object Dataset {
    * @return the name and amount of commits for the top committer.
    */
   def topCommitter(input: List[Commit], repo: String): (String, Int) = {
-    val names = input.filter(c => c.url.split("repos/")(1).split("/commits")(0).equals(repo)).map(c => c.commit.author.name)
+    val names = input.filter(c => c.url.split("/repos/")(1).split("/commits/")(0).equals(repo)).map(c => c.commit.author.name)
     val counts = names.groupBy(identity).map(e => (e._1, e._2.length))
     if(counts.isEmpty) ("",0) else counts.maxBy(_._2)
   }
@@ -82,7 +82,17 @@ object Dataset {
    *         Example output:
    *         Map("KosDP1987/students" -> 1, "giahh263/HQWord" -> 2)
    */
-  def commitsPerRepo(input: List[Commit]): Map[String, Int] = ???
+  def commitsPerRepo(input: List[Commit]): Map[String, Int] = {
+    val fmt = new SimpleDateFormat("yyyy")
+    fmt.setTimeZone(new SimpleTimeZone(0, "UTC"))
+
+
+    val filtered = input.filter(c => fmt.format(c.commit.committer.date).toInt == 2019)
+    val names = filtered.map(c => c.url.split("/").slice(4,6).mkString("/"))
+    val map = names.groupBy(identity).map(e => (e._1, e._2.length))
+
+    map
+  }
 
 
   /** Q27 (9p)
