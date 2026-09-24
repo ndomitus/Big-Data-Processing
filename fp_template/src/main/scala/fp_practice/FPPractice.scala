@@ -27,7 +27,9 @@ object FPPractice {
       * @param grades a list containing a list of grades for each student.
       * @return the amount of students with passing grades.
       */
-    def passingStudents(grades: List[List[Int]]): Int = ???
+    def passingStudents(grades: List[List[Int]]): Int = {
+        grades.count(l => l.forall(x => x >= 4) && (l.sum.toDouble/l.length) >= 5.75)
+    }
 
     /** Q22 (6p)
       * Return the length of the first list of which the first item's value is equal to the sum of all other items.
