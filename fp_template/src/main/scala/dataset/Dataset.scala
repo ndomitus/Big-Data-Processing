@@ -39,7 +39,22 @@ object Dataset {
    * @param input list of commits to process.
    * @return the hour and the amount of files changed during this hour.
    */
-  def jsTime(input: List[Commit]): (Int, Int) = ???
+  def jsTime(input: List[Commit]): (Int, Int) = {
+
+    val fmt = new SimpleDateFormat("H")
+    fmt.setTimeZone(new SimpleTimeZone(0, "UTC"))
+
+    // this gives a list of tuples of (hour of the commit, number of js files in that commit)
+    val pairs = input.map(c => (fmt.format(c.commit.committer.date).toInt, c.files.flatMap(f => f.filename).count(n => n.endsWith(".js"))))
+    val totals = pairs.groupBy(_._1)  // Map[hour, List[(hour, count)]]
+    val summed = totals.map(e => (e._1, e._2.map(_._2).sum)) // Map[hour, sum of counts]
+
+    if(summed.isEmpty) (0,0) else summed.maxBy(_._2)
+
+    // fmt.format(someDate).toInt
+    // commit.commit.commiter.date - date path
+    // commit.files.filename - filename path
+  }
 
 
   /** Q25 (5p)
