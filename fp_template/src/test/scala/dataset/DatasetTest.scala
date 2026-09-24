@@ -43,4 +43,9 @@ class DatasetTest extends FunSuite {
             topFileFormats(source)
         }
     }
+
+    test("Most productive part") {
+        println(mostProductivePart(source))
+    }
+
 }

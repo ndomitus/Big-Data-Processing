@@ -123,5 +123,18 @@ object Dataset {
    *
    * Hint: for the time, use `SimpleDateFormat` and `SimpleTimeZone`.
    */
-  def mostProductivePart(input: List[Commit]): (String, Int) = ???
+  def mostProductivePart(input: List[Commit]): (String, Int) = {
+    val fmt = new SimpleDateFormat("H")
+    fmt.setTimeZone(new SimpleTimeZone(0,"UTC"))
+
+    val hours = input.map(c => fmt.format(c.commit.committer.date).toInt)
+    
+    val morning = ("morning", hours.count(h => h >= 5 && h < 12))
+    val afternoon = ("afternoon", hours.count(h => h >= 12 && h < 17))
+    val evening = ("evening", hours.count(h => h >= 17 && h < 21))
+    val night = ("night", hours.count(h => h >= 21 || h <= 4))
+
+    val parts = List(morning, afternoon, evening, night)
+    parts.maxBy(_._2)
+  }
 }
