@@ -40,5 +40,12 @@ object FPPractice {
       * Read the documentation on the `Option` class to find out what you should return.
       * Hint: it is very similar to the `OptionalInt` you saw earlier.
       */
-    def headSumsTail(xs: List[List[Int]]): Option[Int] = ???
+    def headSumsTail(xs: List[List[Int]]): Option[Int] = {
+        xs.find(l => l.headOption == Option(l.drop(1).sum)).map(_.length)
+
+        // use map because find returns Option[List[Int]]
+        // headOption returns Some[head] and None if the list is empty
+        // drop(1) - returns list of elements after the first element(head) or Nil if list is empty
+        // .tail does the same but throws if list empty, tailOption does not exist
+    }
 }
