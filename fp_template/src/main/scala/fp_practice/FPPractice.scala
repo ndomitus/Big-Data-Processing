@@ -15,7 +15,9 @@ object FPPractice {
       * @param xs the list to process.
       * @return the sum of the first 10 numbers larger than 25.
       */
-    def first10Above25(xs: List[Int]): Int = ???
+    def first10Above25(xs: List[Int]): Int = {
+        xs.filter(x => x > 25).take(10).sum
+    }
 
     /** Q21 (5p)
       * Provided with a list of all grades for each student of a course,
