@@ -68,8 +68,8 @@ object Dataset {
    */
   def topCommitter(input: List[Commit], repo: String): (String, Int) = {
     val names = input.filter(c => c.url.split("/repos/")(1).split("/commits/")(0).equals(repo)).map(c => c.commit.author.name)
-    val counts = names.groupBy(identity).map(e => (e._1, e._2.length))
-    if(counts.isEmpty) ("",0) else counts.maxBy(_._2)
+    val count = names.groupBy(identity).map(e => (e._1, e._2.length))
+    if(count.isEmpty) ("",0) else count.maxBy(_._2)
   }
 
   /** Q26 (9p)
