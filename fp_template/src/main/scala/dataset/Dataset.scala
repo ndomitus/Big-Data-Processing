@@ -68,8 +68,8 @@ object Dataset {
    */
   def topCommitter(input: List[Commit], repo: String): (String, Int) = {
     val names = input.filter(c => c.url.split("/repos/")(1).split("/commits/")(0).equals(repo)).map(c => c.commit.author.name)
-    val count = names.groupBy(identity).map(e => (e._1, e._2.length))
-    if(count.isEmpty) ("",0) else count.maxBy(_._2)
+    val counts = names.groupBy(identity).map(e => (e._1, e._2.length))
+    if(counts.isEmpty) ("",0) else counts.maxBy(_._2)
   }
 
   /** Q26 (9p)
@@ -95,7 +95,6 @@ object Dataset {
   }
 
 
-
   /** Q27 (9p)
    * Derive the 5 file types that appear most frequent in the commit logs.
    * NB!filename of a file is always defined.
@@ -103,19 +102,6 @@ object Dataset {
    * @return 5 tuples containing the file extension and frequency of the most frequently appeared file types, ordered descendingly.
    */
   def topFileFormats(input: List[Commit]): List[(String, Int)] = {
-    val files = input.flatMap(c => c.files.flatMap(f => f.filename))
-    val types = files.filter(f => f.contains(".")).map(f => f.substring(f.lastIndexOf('.') + 1))
-    val groups = types.groupBy(identity).map(e => (e._1, e._2.length))
-
-    groups.toList.sortBy(e => -e._2).take(5)
-  }
-  /** Q27.1 (9p)
-   * Derive the 5 file types that appear most frequent in the commit logs.
-   * NB!filename of a file is always defined.
-   * @param input the list of commits to process.
-   * @return 5 tuples containing the file extension and frequency of the most frequently appeared file types, ordered descendingly.
-   */
-  def topFileFormats1(input: List[Commit]): List[(String, Int)] = {
     val files = input.flatMap(c => c.files.flatMap(f => f.filename))
     val types = files.filter(f => f.contains(".")).map(f => f.substring(f.lastIndexOf('.') + 1))
     val groups = types.groupBy(identity).map(e => (e._1, e._2.length))
