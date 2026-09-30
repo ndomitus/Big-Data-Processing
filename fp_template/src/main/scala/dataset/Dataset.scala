@@ -109,6 +109,19 @@ object Dataset {
 
     groups.toList.sortBy(e => -e._2).take(5)
   }
+  /** Q27.1 (9p)
+   * Derive the 5 file types that appear most frequent in the commit logs.
+   * NB!filename of a file is always defined.
+   * @param input the list of commits to process.
+   * @return 5 tuples containing the file extension and frequency of the most frequently appeared file types, ordered descendingly.
+   */
+  def topFileFormats1(input: List[Commit]): List[(String, Int)] = {
+    val files = input.flatMap(c => c.files.flatMap(f => f.filename))
+    val types = files.filter(f => f.contains(".")).map(f => f.substring(f.lastIndexOf('.') + 1))
+    val groups = types.groupBy(identity).map(e => (e._1, e._2.length))
+
+    groups.toList.sortBy(e => -e._2).take(5)
+  }
 
 
   /** Q28 (9p)
